@@ -386,10 +386,13 @@ class TickerBase():
                 df.index.name = 'Year'
                 self._earnings['yearly'] = df
 
-                df = _pd.DataFrame(earnings['quarterly']).set_index('date')
-                df.columns = utils.camel2title(df.columns)
-                df.index.name = 'Quarter'
-                self._earnings['quarterly'] = df
+                # add quarterly earnings to df
+                quarterly_earnings = earnings.get('quarterly')
+                if quarterly_earnings is not None and len(quarterly_earnings) > 0:
+                    df = _pd.DataFrame(earnings['quarterly']).set_index('date')
+                    df.columns = utils.camel2title(df.columns)
+                    df.index.name = 'Quarter'
+                    self._earnings['quarterly'] = df
 
         self._fundamentals = True
 
