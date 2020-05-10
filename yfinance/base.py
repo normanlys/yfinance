@@ -371,24 +371,25 @@ class TickerBase():
 
             item = key[1] + 'History'
             if isinstance(data.get(item), dict):
-                key[0]['yearly'] = cleanup(data[item][key[2]])
+                key[0]['yearly'] = cleanup(data.get(item).get(key[2]))
 
             item = key[1]+'HistoryQuarterly'
             if isinstance(data.get(item), dict):
-                key[0]['quarterly'] = cleanup(data[item][key[2]])
+                key[0]['quarterly'] = cleanup(data.get(item).get(key[2]))
 
         # earnings
         if isinstance(data.get('earnings'), dict):
-            earnings = data['earnings']['financialsChart']
-            df = _pd.DataFrame(earnings['yearly']).set_index('date')
-            df.columns = utils.camel2title(df.columns)
-            df.index.name = 'Year'
-            self._earnings['yearly'] = df
+            earnings = data['earnings'].get('financialsChart')
+            if earnings is not None:
+                df = _pd.DataFrame(earnings['yearly']).set_index('date')
+                df.columns = utils.camel2title(df.columns)
+                df.index.name = 'Year'
+                self._earnings['yearly'] = df
 
-            df = _pd.DataFrame(earnings['quarterly']).set_index('date')
-            df.columns = utils.camel2title(df.columns)
-            df.index.name = 'Quarter'
-            self._earnings['quarterly'] = df
+                df = _pd.DataFrame(earnings['quarterly']).set_index('date')
+                df.columns = utils.camel2title(df.columns)
+                df.index.name = 'Quarter'
+                self._earnings['quarterly'] = df
 
         self._fundamentals = True
 
